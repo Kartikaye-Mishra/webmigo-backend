@@ -1,0 +1,86 @@
+import express from "express"
+import mongoose from "mongoose"
+
+const app = express();
+
+mongoose
+  .connect("mongodb://localhost:27017", {
+    dbName: "backendapi",
+  })
+  .then(() => {
+    console.log("Database Connected");
+  })
+  .catch((e) => {
+    console.log(e);
+  });
+
+  const Schema = new mongoose.Schema({
+    name:String,
+    email:String,
+    password:String
+  }) 
+
+  const User = mongoose.model("User",Schema);
+
+  //Using Middleware
+  app.use(express.json());//to get json data from postman
+
+app.get("/",(req,res)=>{
+    res.send("Nice")
+})
+
+app.get("/users/all",async(req,res)=>{
+ 
+    console.log(req.query);
+    const keyword = req.query.keyword;
+    console.log(keyword);
+
+    const users = await User.find({});
+
+    res.json({
+        success:true,
+        users:users
+    })
+})
+
+//dynamic API => Static URL  whatever be written after static url/
+//              {/userid/}    {:id}
+app.get("/userid/:id",async(req,res)=>{
+    
+    const id = req.params.id;
+    console.log(id);
+
+    const user = await User.findById(id);
+    console.log(user);
+    res.json({
+        success:true,
+        user
+    })
+})
+// Same Static URL /users/singleuser/ so keep it above the dynamic one
+// app.get("/userid/special",(req,res)=>{
+//     res.json({
+//         Success: true,
+//         message:"Done"
+//     })
+// })
+// Won't work due to above dynamic url keep it before the upper one
+app.post("/users/new",async(req,res)=>{
+ const {name,email,password} = await req.body;
+
+  await User.create({
+   name,
+   email,
+   password
+   })
+
+    res.status(201).cookie("token","iamin").json({
+        success:true,
+       message: "Signed Up Successfully"
+    })
+    
+})
+
+app.listen(4000,(req,res)=>{
+    console.log("Server is working.");
+})

@@ -9,7 +9,15 @@ const app = express();
 config({
   path:"./data/config.env"
 })
-app.use(cors());
+app.use(cors(
+  {
+    origin:[process.env.FRONTEND_URL],
+    methods:["GET","POST"],
+
+  }
+))
+
+// app.use(cors());
 
 
 
@@ -17,7 +25,7 @@ app.use(cors());
   app.use("/mail",mailRouter);
 
 app.get("/",(req,res)=>{
-    res.send("Nice")
+    res.send("Webmigo")
 })
 
 export default app;

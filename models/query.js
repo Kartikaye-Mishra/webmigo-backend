@@ -4,7 +4,9 @@ import mongoose from "mongoose"
     fname:String,
     lname:String,
     email:String,
-    message:String
+    message:String,
+    timestamps: true 
+    
   }) 
 
   const Query = mongoose.model("Query",Schema);

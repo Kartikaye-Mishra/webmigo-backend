@@ -5,9 +5,10 @@ import mongoose from "mongoose"
     lname:String,
     email:String,
     message:String,
-    timestamps: true 
     
-  }) 
+  },
+  { timestamps: true }
+) 
 
   const Query = mongoose.model("Query",Schema);
 
